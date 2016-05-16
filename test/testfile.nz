@@ -1,0 +1,10 @@
+()
+
+Add::int->int->int
+Add x y = x + y
+
+AddAndMultiply::int->int->int
+AddAndMultiply x y = (x+y)*(y+x)
+
+AddM::int->int
+AddM x = x + 1000000
