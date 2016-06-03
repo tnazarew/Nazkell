@@ -16,20 +16,20 @@ namespace nazkell
     public:
         Lexer(std::istream& in);
 
-        Lexer(const Lexer&) = delete;
-        const Lexer& operator=(const Lexer&) = delete;
+//        Lexer(const Lexer&) = delete;
+//        const Lexer& operator=(const Lexer&) = delete;
 
         void readNextToken();
         Token getToken() const;
 
     private:
         bool tryEof();
+        bool tryNewLine();
         bool tryInteger();
         bool tryBoolean(const std::string&);
         bool tryOperatorOrSymbol();
         bool tryReservedID(const std::string&);
         bool tryIdentificator(const std::string&);
-        bool tryFIdentificator(const std::string&);
 
         void ignoreWhitespaces();
         void throwUnknownToken();

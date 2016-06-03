@@ -5,11 +5,11 @@
 #include <identificator.h>
 namespace nazkell
 {
-    std::string toString(Identificator id) {
+    std::string toString(Id id) {
         return std::string(id.getID());
     }
 
-    const char* Identificator::getID()
+    const char* Id::getID()
     {
         return id;
     }

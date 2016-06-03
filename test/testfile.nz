@@ -1,10 +1,14 @@
-()
-
 Add::int->int->int
 Add x y = x + y
 
 AddAndMultiply::int->int->int
 AddAndMultiply x y = (x+y)*(y+x)
+                      if x+y
+                      then
+                        x
+                      else
+                        y
+                      fi
 
 AddM::int->int
 AddM x = x + 1000000

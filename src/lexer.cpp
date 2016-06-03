@@ -17,9 +17,10 @@ namespace nazkell {
         if (tryEof())
             return;
         throwOnStreamError();
+        if(tryNewLine())
+            return;
         std::string input;
-        if (tryOperatorOrSymbol()
-                )
+        if (tryOperatorOrSymbol())
             return;
         else if(tryInteger())
             return;
@@ -27,7 +28,7 @@ namespace nazkell {
         {
             input = readStringOfLetters();
             if (tryBoolean(input) || tryReservedID(input)
-                || tryIdentificator(input) || tryFIdentificator(input))
+                || tryIdentificator(input))
                 return;
         }
 
@@ -61,8 +62,9 @@ namespace nazkell {
     }
 
     void Lexer::ignoreWhitespaces() {
-        while (in && std::isspace(in.peek()))
+        while (!in.eof() && std::isspace(in.peek()) && in.peek() != 0x0a)
             in.get();
+
     }
 
     void Lexer::throwOnStreamError() {
@@ -215,31 +217,17 @@ namespace nazkell {
 
     }
 
-    bool Lexer::tryFIdentificator(const std::string& in)
-    {
-        if(std::isupper(in[0]))
-        {
-
-            token = Token(FIdentificator(in));
-            return true;
-        }
-    }
-
     bool Lexer::tryIdentificator(const std::string& in)
     {
-        if(std::islower(in[0]))
-        {
-
-            token = Token(Identificator(in));
+            token = Token(in);
             return true;
-        }
     }
 
     bool Lexer::tryReservedID(const std::string& in)
     {
         if(in == "if")
         {
-            token = ReservedID::IF;
+            token = ReservedID::If;
             return true;
         }
         else if(in == "else")
@@ -250,6 +238,10 @@ namespace nazkell {
         else if(in == "then")
         {
             token = ReservedID::Then;
+            return true;
+        }else if(in == "fi")
+        {
+            token = ReservedID::Fi;
             return true;
         }else if(in == "bool")
         {
@@ -270,5 +262,15 @@ namespace nazkell {
             return false;
         token = Token(std::stoi(buf));
         return true;
+    }
+    bool Lexer::tryNewLine()
+    {
+        if(in.peek() == 0x0a)
+        {
+            in.get();
+            token = Symbol::NewLine;
+            return true;
+        }
+        return false;
     }
 }

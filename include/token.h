@@ -20,13 +20,33 @@ namespace nazkell
         enum class Type
         {
             Eof,
-            Symbol,
-            Operator,
+            BracketOpen,
+            BracketClose,
+            SBracketOpen,
+            SBracketClose,
+            Comma,
+            Right,
+            Left,
+            DoubleDot,
+            Colon,
+            NewLine,
+            Operator1,
+            Operator2,
+            Operator3,
+            Operator4,
+            Operator5,
+            Operator6,
+            Not,
             Bool,
             Int,
-            ReservedID,
-            Identificator,
-            FIdentificator,
+            If,
+            Then,
+            Else,
+            Fi,
+            Boolean,
+            Integer,
+            Id,
+            Fid,
 
         };
         Token();
@@ -35,8 +55,7 @@ namespace nazkell
         Token(Operator o);
         Token(ReservedID);
         Token(Symbol);
-        Token(Identificator);
-        Token(FIdentificator);
+        Token(std::string);
 
         Type getType() const { return type; }
         int getInteger() const { return value.integer; }
@@ -44,8 +63,7 @@ namespace nazkell
         Operator getOperator() const { return value.op; }
         Symbol getSymbol() const { return value.sym; }
         ReservedID getReserverdID() const { return value.rid; }
-        const char* getIdentificator() const { return value.id;}
-        const char* getFIdentificator() const { return value.fid;}
+        std::string getId() const { return value.id;}
 
         std::string toString();
         static std::string toString(Token::Type type);
@@ -53,15 +71,14 @@ namespace nazkell
         std::string valueToString() const;
 
         Type type;
-        union
+        struct
         {
             int integer;
             bool boolean;
             Symbol sym;
             Operator op;
             ReservedID rid;
-            const char* id;
-            const char* fid;
+            std::string id;
         } value;
 
     };

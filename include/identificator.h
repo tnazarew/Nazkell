@@ -10,19 +10,19 @@
 
 namespace nazkell
 {
-    class Identificator
+    class Id
     {
         const char* id;
 
     public:
-        Identificator(){id = 0;}
-        Identificator(std::string s): id(s.c_str()){}
+        Id(){id = 0;}
+        Id(std::string s): id(s.c_str()){}
         const char* getID();
     };
 
 
 
-    inline std::ostream& operator<<(std::ostream& out, Identificator i) { return out << i.getID(); }
+    inline std::ostream& operator<<(std::ostream& out, Id i) { return out << i.getID(); }
 
 }
 

@@ -10,17 +10,17 @@
 #include <identificator.h>
 namespace nazkell
 {
-    class FIdentificator
+    class Fid
     {
         const char* fid;
     public:
-        FIdentificator(){fid = 0;}
-        FIdentificator(std::string s): fid(s.c_str()){}
+        Fid(){fid = 0;}
+        Fid(std::string s): fid(s.c_str()){}
         const char* getFID();
     };
 
 //    std::string toString(const  i);
-    inline std::ostream& operator<<(std::ostream& out, FIdentificator i) { return out << i.getFID(); }
+    inline std::ostream& operator<<(std::ostream& out, Fid i) { return out << i.getFID(); }
 
 }
 

@@ -21,6 +21,7 @@ namespace nazkell
         Left,
         DoubleDot,
         Colon,
+        NewLine,
     };
 
     std::string toString(Symbol o);

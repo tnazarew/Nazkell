@@ -12,9 +12,10 @@ namespace nazkell
 {
     enum class ReservedID
     {
-        IF,
+        If,
         Then,
         Else,
+        Fi,
         Bool,
         Int,
     };

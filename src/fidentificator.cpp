@@ -6,12 +6,12 @@
 
 namespace nazkell
 {
-    const char* FIdentificator::getFID()
+    const char* Fid::getFID()
     {
         return fid;
     }
 
-    std::string toString(FIdentificator fid)
+    std::string toString(Fid fid)
     {
         return std::string(fid.getFID());
     }

@@ -26,5 +26,8 @@ std::string nazkell::toString(Symbol s)
             return "..";
         case Symbol::Colon:
             return "::";
+        case Symbol::NewLine:
+            return "newline";
+
     }
 }
