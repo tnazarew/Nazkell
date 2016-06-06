@@ -4,15 +4,18 @@
 #include <parser.h>
 #include <fstream>
 
-int main()
+int main(int argc, char** argv)
 {
-    std::fstream fs;
-    fs.open("/home/tomasz/ClionProjects/Nazkell/test/testfile.nz", std::fstream::in);
-    std::unique_ptr<nazkell::Lexer> l(new nazkell::Lexer(fs));
-    nazkell::Parser p(std::move(l));
-    auto body (p.parse());
-    std::cout << "PARSED STRUCTURES" << std::endl;
-    std::cout << body->toString();
-//    fs.close();
+    if(argc > 1)
+    {
+        std::fstream fs;
+        fs.open(argv[1], std::fstream::in);
+        std::unique_ptr<nazkell::Lexer> l(new nazkell::Lexer(fs));
+        nazkell::Parser p(std::move(l));
+        auto body(p.parse());
+        std::cout << "PARSED STRUCTURES" << std::endl;
+        std::cout << body->toString();
+        fs.close();
+    }
     return 0;
 }
