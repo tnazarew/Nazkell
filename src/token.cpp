@@ -71,7 +71,7 @@ namespace nazkell
                 type = Type::Operator5;
                 break;
             case Operator::Assign:
-                type = Type::Operator4;
+                type = Type::Operator6;
                 break;
             case Operator::NotEqual:
                 type = Type::Operator5;

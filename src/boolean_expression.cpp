@@ -11,11 +11,15 @@ namespace nazkell
     { }
     Expression::ExpressionType BooleanExpression::getType() const
     {
-
+        return ExpressionType::Boolean;
     }
-    int BooleanExpression::getValue() const
+    int BooleanExpression::evaluateInt(unsigned int stackID) const
     {
-
+        throwWrongType(ExpressionType::Boolean);
+    }
+    bool BooleanExpression::evaluateBool(unsigned int stackID) const
+    {
+        return value;
     }
     std::string BooleanExpression::toString() const
     {

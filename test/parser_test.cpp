@@ -6,10 +6,13 @@
 
 int main()
 {
-    std::fstream in;
-    nazkell::Lexer l(in);
-    nazkell::Parser p(l);
-    p.parse();
-
+    std::fstream fs;
+    fs.open("/home/tomasz/ClionProjects/Nazkell/test/testfile.nz", std::fstream::in);
+    std::unique_ptr<nazkell::Lexer> l(new nazkell::Lexer(fs));
+    nazkell::Parser p(std::move(l));
+    auto body (p.parse());
+    std::cout << "PARSED STRUCTURES" << std::endl;
+    std::cout << body->toString();
+//    fs.close();
     return 0;
 }

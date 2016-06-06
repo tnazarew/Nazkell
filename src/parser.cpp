@@ -7,8 +7,8 @@
 
 namespace nazkell
 {
-    Parser::Parser(Lexer lexer_)
-    :lexer(lexer_)
+    Parser::Parser(std::unique_ptr<Lexer> lexer_)
+    :lexer(std::move(lexer_))
     {
     }
 
@@ -23,26 +23,27 @@ namespace nazkell
 
     std::unique_ptr<Body> Parser::readBody()
     {
+        std::vector<std::unique_ptr<Declaration> > declarations;
+        std::vector<std::unique_ptr<Definition> > definitions;
         advance();
-        std::unique_ptr<Body> body;
-        while(lexer.getToken().getType() != Token::Type::Eof)
+        while(lexer->getToken().getType() != Token::Type::Eof)
         {
-            if(lexer.getToken().getType() != Token::Type::Fid)
-                perror("invalid token or watever");
-            std::string id = lexer.getToken().getId();
+            if(lexer->getToken().getType() != Token::Type::Fid)
+                throwOnUnexpectedInput(Token::Type::Fid);
+            std::string id = lexer->getToken().getId();
             advance();
-            if(lexer.getToken().getType() == Token::Type::Colon)
+            if(lexer->getToken().getType() == Token::Type::Colon)
             {
-                body->addDeclaration(std::move(readDeclaration(id)));
+                declarations.push_back(std::move(readDeclaration(id)));
             }
-            else if(lexer.getToken().getType() == Token::Type::Id)
+            else if(lexer->getToken().getType() == Token::Type::Id)
             {
-                body->addDefinition(std::move(readDefinition(id)));
+                definitions.push_back(std::move(readDefinition(id)));
             }
-            advance();
+
         }
 
-        return body;
+        return std::move(std::unique_ptr<Body> (&Body::init(std::move(declarations), std::move(definitions))));
     }
     std::unique_ptr<Declaration> Parser::readDeclaration(std::string fid)
     {
@@ -51,7 +52,7 @@ namespace nazkell
         advance();
         if(getTokenType() == Token::Type::Bool
                 || getTokenType() == Token::Type::Int)
-            types.push_back(lexer.getToken().getType());
+            types.push_back(lexer->getToken().getType());
         else
         {
             std::vector<Token::Type> temp;
@@ -61,12 +62,12 @@ namespace nazkell
         advance();
         while(getTokenType() != Token::Type::NewLine)
         {
-            if(getTokenType() != Token::Type::Left)
-                throwOnUnexpectedInput(Token::Type::Left);
+            if(getTokenType() != Token::Type::Right)
+                throwOnUnexpectedInput(Token::Type::Right);
             advance();
             if(getTokenType() == Token::Type::Bool
                 || getTokenType() == Token::Type::Int)
-                types.push_back(lexer.getToken().getType());
+                types.push_back(lexer->getToken().getType());
             else
             {
                 std::vector<Token::Type> temp;
@@ -75,7 +76,8 @@ namespace nazkell
             }
             advance();
         }
-        return std::unique_ptr<Declaration>(new Declaration(fid, types));
+        advance();
+        return std::move(std::unique_ptr<Declaration>(new Declaration(fid, types)));
     }
     std::unique_ptr<Definition> Parser::readDefinition(std::string fid)
     {
@@ -89,22 +91,27 @@ namespace nazkell
         advance();
         do
         {
+            // assuming that readExpression ends with advance(),
             expressions.push_back(std::move(readExpression()));
+            if(getTokenType() != Token::Type::NewLine)
+                throwOnUnexpectedInput(Token::Type::NewLine);
             advance();
-            advance();
-        }while(getTokenType() != Token::Type::NewLine);
+        }while(getTokenType() != Token::Type::NewLine && getTokenType() != Token::Type::Eof);
+        advance();
+        return std::move(std::unique_ptr<Definition>(new Definition(fid, tokens, std::move(expressions))));
     }
 
     std::unique_ptr<Expression> Parser::readExpression()
     {
+        // again assuming that each read pushesh to token after itself
         std::unique_ptr<Expression> exp = readSingleExpression();
-        advance();
+
         while(isOperator())
         {
             exp = readOp1Exp(std::move(exp));
-            advance();
+            std::cout << exp->toString();
         }
-
+        return std::move(exp);
     }
 
     std::unique_ptr<Expression> Parser::readSingleExpression()
@@ -123,44 +130,68 @@ namespace nazkell
                 return readFunction();
             case Token::Type::BracketOpen :
                 return readParenthesesExperssion();
-            case Token::Type::SBracketOpen :
-                return readList();
-            case Token::Type::Not :
-                return readNegation();
+//            case Token::Type::SBracketOpen :
+//                return readList();
+
         }
 
     }
 
     std::unique_ptr<Expression> Parser::readBoolean()
     {
-        return std::unique_ptr<Expression>(new BooleanExpression(lexer.getToken().getBoolean()));
+        std::unique_ptr<Expression> exp(new BooleanExpression(lexer->getToken().getBoolean()));
+        advance();
+        return exp;
     }
 
     std::unique_ptr<Expression> Parser::readInteger()
     {
-        return std::unique_ptr<Expression>(new IntegerExpression(lexer.getToken().getInteger()));
+        std::unique_ptr<Expression> exp(new IntegerExpression(lexer->getToken().getInteger()));
+        advance();
+        return exp;
     }
 
     std::unique_ptr<Expression> Parser::readIfStatement()
     {
         std::vector< std::unique_ptr < Expression > > ifexp, elseexp, cond;
+        advance();
         while(getTokenType() != Token::Type::Then)
         {
-            advance();
             cond.push_back(std::move(readExpression()));
+            if(getTokenType()!= Token::Type::NewLine)
+                throwOnUnexpectedInput(Token::Type::NewLine);
+            else
+                advance();
         }
-        while(getTokenType() != Token::Type::Else || getTokenType()!= Token::Type::Fi)
+        advance();
+        while(getTokenType() != Token::Type::Else && getTokenType()!= Token::Type::Fi)
         {
             advance(); // or not ?
             ifexp.push_back(std::move(readExpression()));
+            if(getTokenType()!= Token::Type::NewLine)
+                throwOnUnexpectedInput(Token::Type::NewLine);
+            else
+                advance();
         }
         if(getTokenType() == Token::Type::Else)
-            while(getTokenType()!= Token::Type::Fi)
-            {
+        {
+            advance();
+            if(getTokenType()!= Token::Type::NewLine)
+                throwOnUnexpectedInput(Token::Type::NewLine);
+            else
                 advance();
+            do
+            {
                 elseexp.push_back(std::move(readExpression()));
-            }
-        return std::unique_ptr<Expression> (new IfExpression(std::move(cond), std::move(ifexp), std::move(elseexp)));
+//                advance();
+                if(getTokenType()!= Token::Type::NewLine)
+                    throwOnUnexpectedInput(Token::Type::NewLine);
+                else
+                    advance();
+            }while(getTokenType()!= Token::Type::Fi);
+        }
+        advance();
+        return std::move(std::unique_ptr<Expression>(new IfExpression(std::move(cond), std::move(ifexp), std::move(elseexp))));
     }
 
     std::unique_ptr<Expression> Parser::readParenthesesExperssion()
@@ -169,12 +200,13 @@ namespace nazkell
         std::unique_ptr<Expression> exp(readExpression());
         if(getTokenType() != Token::Type::BracketClose)
             throwOnUnexpectedInput(Token::Type::BracketClose);
+        advance();
         return exp;
     }
 
     std::unique_ptr<Expression> Parser::readOp1Exp(std::unique_ptr<Expression> left)
     {
-        if(getTokenType() != Token::Type::Operator1)
+        if(getTokenType() != Token::Type::Operator6)
         {
             return readOp2Exp(std::move(left));
         }
@@ -182,10 +214,10 @@ namespace nazkell
         {
             if(left->getType() != Expression::ExpressionType::Id)
                 throwOnUnexpectedInput(Token::Type::Id);
-            Operator op = lexer.getToken().getOperator();
+            Operator op = lexer->getToken().getOperator();
             advance();
             std::unique_ptr<Expression> right = readSingleExpression();
-            advance();
+
             return std::unique_ptr<Expression>(
                     new OperatorExpression(std::move(left), op, std::move(readOp2Exp(std::move(right)))));
         }
@@ -196,16 +228,16 @@ namespace nazkell
 
     std::unique_ptr<Expression> Parser::readOp2Exp(std::unique_ptr<Expression> left)
     {
-        if(getTokenType() != Token::Type::Operator2)
+        if(getTokenType() != Token::Type::Operator5)
         {
             return readOp3Exp(std::move(left));
         }
         else
         {
-            Operator op = lexer.getToken().getOperator();
+            Operator op = lexer->getToken().getOperator();
             advance();
             std::unique_ptr<Expression> right = readSingleExpression();
-            advance();
+
             return std::unique_ptr<Expression>(
                     new OperatorExpression(std::move(left), op, std::move(readOp3Exp(std::move(right)))));
         }
@@ -213,16 +245,16 @@ namespace nazkell
 
     std::unique_ptr<Expression> Parser::readOp3Exp(std::unique_ptr<Expression> left)
     {
-        if(getTokenType() != Token::Type::Operator3)
+        if(getTokenType() != Token::Type::Operator4)
         {
             return readOp4Exp(std::move(left));
         }
         else
         {
-            Operator op = lexer.getToken().getOperator();
+            Operator op = lexer->getToken().getOperator();
             advance();
             std::unique_ptr<Expression> right = readSingleExpression();
-            advance();
+
             return std::unique_ptr<Expression>(
                     new OperatorExpression(std::move(left), op, std::move(readOp4Exp(std::move(right)))));
         }
@@ -230,16 +262,16 @@ namespace nazkell
 
     std::unique_ptr<Expression> Parser::readOp4Exp(std::unique_ptr<Expression> left)
     {
-        if(getTokenType() != Token::Type::Operator4)
+        if(getTokenType() != Token::Type::Operator3)
         {
             return readOp5Exp(std::move(left));
         }
         else
         {
-            Operator op = lexer.getToken().getOperator();
+            Operator op = lexer->getToken().getOperator();
             advance();
             std::unique_ptr<Expression> right = readSingleExpression();
-            advance();
+
             return std::unique_ptr<Expression>(
                     new OperatorExpression(std::move(left), op, std::move(readOp5Exp(std::move(right)))));
         }
@@ -247,16 +279,16 @@ namespace nazkell
 
     std::unique_ptr<Expression> Parser::readOp5Exp(std::unique_ptr<Expression> left)
     {
-        if(getTokenType() != Token::Type::Operator5)
+        if(getTokenType() != Token::Type::Operator2)
         {
             return readOp6Exp(std::move(left));
         }
         else
         {
-            Operator op = lexer.getToken().getOperator();
+            Operator op = lexer->getToken().getOperator();
             advance();
             std::unique_ptr<Expression> right = readSingleExpression();
-            advance();
+
             return std::unique_ptr<Expression>(
                     new OperatorExpression(std::move(left), op, std::move(readOp6Exp(std::move(right)))));
         }
@@ -264,7 +296,7 @@ namespace nazkell
 
     std::unique_ptr<Expression> Parser::readOp6Exp(std::unique_ptr<Expression> left)
     {
-        if(getTokenType() != Token::Type::Operator6)
+        if(getTokenType() != Token::Type::Operator1)
         {
             if(isOperator())
                 return readOp1Exp(std::move(left));
@@ -275,72 +307,79 @@ namespace nazkell
         }
         else
         {
-            Operator op = lexer.getToken().getOperator();
+            Operator op = lexer->getToken().getOperator();
             advance();
             std::unique_ptr<Expression> right = readSingleExpression();
-            advance();
+
             return std::unique_ptr<Expression>(
                     new OperatorExpression(std::move(left), op, std::move(readOp1Exp(std::move(right)))));
         }
     }
 
-    std::unique_ptr<Expression> Parser::readList()
-    {
-
-    }
+//    std::unique_ptr<Expression> Parser::readList()
+//    {
+//        std::vector<std::unique_ptr<Expression> > exp,
+//        advance();
+//        if(getTokenType() != Token::Type::SBracketClose)
+//        {
+//            advance();
+//            exp.push_back(std::move(readExpression()));
+//            if(getTokenType() != Token::Type::DoubleDot)
+//            {
+//
+//            }
+//            else
+//            {
+//                if()
+//            }
+//
+//        }
+//        else
+//        {
+//            advance();
+//            return std::move(std::unique_ptr<Expression>(new SimpleList()));
+//        }
+//    }
 
     std::unique_ptr<Expression> Parser::readFunction()
     {
+
         std::string id;
-        std::vector<std::unique_ptr<Expression> > args;
+        std::vector<std::unique_ptr<Expression> > temp_args;
+        std::vector<std::shared_ptr<Expression> > args;
         if(getTokenType() != Token::Type::Fid)
             throwOnUnexpectedInput(Token::Type::Fid);
-        id = lexer.getToken().getId();
+        id = lexer->getToken().getId();
         advance();
         if(getTokenType() != Token::Type::BracketOpen)
             throwOnUnexpectedInput(Token::Type::Fid);
         advance();
         while(getTokenType() != Token::Type::BracketClose)
-            args.push_back(std::move(readExpression()));
+            temp_args.push_back(std::move(readExpression()));
+        advance();
+
+        for(auto& i : temp_args)
+            args.push_back(std::shared_ptr<Expression>(i.release()));
+
+        return std::unique_ptr<Expression> (new FunctionExpression(id, args));
     }
     std::unique_ptr<Expression> Parser::readVariable()
     {
-        return std::unique_ptr<Expression>(new VariableExpression(requireToken(Token::Type::Id).getId()));
-    }
-    std::unique_ptr<Expression> Parser::readNegation()
-    {
-
+        std::unique_ptr<Expression> exp(new VariableExpression(requireToken(Token::Type::Id).getId()));
+        advance();
+        return exp;
     }
 
-    std::unique_ptr<Expression> Parser::readCondition()
-    {
-        switch(getTokenType())
-        {
-            case Token::Type::Boolean :
-                return readBoolean();
-            case Token::Type::Integer :
-                return readInteger();
-            case Token::Type::Id :
-                return readVariable();
-            case Token::Type::Fid :
-                return readFunction();
-            case Token::Type::BracketOpen :
-                return readParenthesesExperssion();
-            case Token::Type::SBracketOpen :
-                return readList();
-            case Token::Type::Not :
-                return readNegation();
-        }
-    }
+
 
     void Parser::advance()
     {
-        lexer.readNextToken();
-        std::cout << lexer.getToken() << std::endl;
+        lexer->readNextToken();
+        std::cout << lexer->getToken() << std::endl;
     }
     void Parser::throwOnUnexpectedInput(Token::Type expected)
     {
-        throw std::runtime_error("Unexpected token: " + lexer.getToken().toString()
+        throw std::runtime_error("Unexpected token: " + lexer->getToken().toString()
                            + ", expecting: " + Token::toString(expected));
     }
     void Parser::throwOnUnexpectedInput(std::vector<Token::Type> expected)
@@ -350,12 +389,12 @@ namespace nazkell
         {
             tokens << i << ", ";
         }
-        throw std::runtime_error("Unexpected token: " + lexer.getToken().toString()
+        throw std::runtime_error("Unexpected token: " + lexer->getToken().toString()
                            + ", expecting: " + tokens.str());
     }
     Token::Type Parser::getTokenType()
     {
-        return lexer.getToken().getType();
+        return lexer->getToken().getType();
     }
     bool Parser::isOperator()
     {
@@ -367,7 +406,7 @@ namespace nazkell
 
     Token Parser::requireToken(Token::Type expected)
     {
-        const auto token = lexer.getToken();
+        const auto token = lexer->getToken();
         const auto type = token.getType();
         if (type != expected)
             throwOnUnexpectedInput(expected);

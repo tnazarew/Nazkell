@@ -14,7 +14,9 @@ namespace nazkell
     class BooleanExpression : public Expression
     {
         ExpressionType getType() const override;
-        int getValue() const override;
+        int evaluateInt(unsigned int stackID) const override;
+        bool evaluateBool(unsigned int stackID) const override;
+
         std::string toString() const override;
         bool value;
     public:
@@ -24,7 +26,8 @@ namespace nazkell
     class IntegerExpression : public Expression
     {
         ExpressionType getType() const override;
-        int getValue() const override;
+        int evaluateInt(unsigned int ) const override;
+        bool evaluateBool(unsigned int ) const override;
         std::string toString() const override;
         int value;
     public:
@@ -39,7 +42,8 @@ namespace nazkell
     {
         std::vector<std::unique_ptr<Expression> > cond, ifexp, elseexp;
         ExpressionType getType() const override;
-        int getValue() const override;
+        int evaluateInt(unsigned int ) const override;
+        bool evaluateBool(unsigned int ) const override;
         std::string toString() const override;
     public:
         IfExpression(std::vector<std::unique_ptr<Expression> > cond_,
@@ -51,22 +55,24 @@ namespace nazkell
     {
         std::string id;
         ExpressionType getType() const override;
-        int getValue() const override;
+        int evaluateInt(unsigned int ) const override;
+        bool evaluateBool(unsigned int ) const override;
         std::string toString() const override;
     public:
+        std::string getID() const ;
         VariableExpression(std::string id_);
         ~VariableExpression();
     };
     class FunctionExpression : public Expression
     {
         std::string id;
-        std::vector<std::unique_ptr<Expression> > arguments;
+        std::vector<std::shared_ptr<Expression> > arguments;
         ExpressionType getType() const override;
-        int getValue() const override;
+        int evaluateInt(unsigned int ) const override;
+        bool evaluateBool(unsigned int ) const override;
         std::string toString() const override;
     public:
-        FunctionExpression(std::string id_, std::vector<std::unique_ptr<Expression> > arguments_)
-                : id(id_), arguments(std::move(arguments_)){}
+        FunctionExpression(std::string id_, std::vector<std::shared_ptr<Expression> > arguments_);
         ~FunctionExpression();
     };
     class OperatorExpression : public Expression
@@ -74,13 +80,52 @@ namespace nazkell
         Operator op;
         std::unique_ptr<Expression> left, right;
         ExpressionType getType() const override;
-        int getValue() const override;
+        int evaluateInt(unsigned int ) const override;
+        bool evaluateBool(unsigned int ) const override;
         std::string toString() const override;
+        int power(const int, const int) const;
     public:
         OperatorExpression(std::unique_ptr<Expression> l, Operator o, std::unique_ptr<Expression> r);
         ~OperatorExpression();
     };
+    class SimpleList: public Expression
+    {
 
+        ExpressionType getType() const override;
+        int evaluateInt(unsigned int ) const override;
+        bool evaluateBool(unsigned int ) const override;
+        std::string toString() const override;
+    public:
+        SimpleList();
+        ~SimpleList();
+    };
+
+    class ComprehensionList:public Expression
+    {
+
+        ExpressionType getType() const override;
+        int evaluateInt(unsigned int ) const override;
+        bool evaluateBool(unsigned int ) const override;
+        std::string toString() const override;
+
+    public:
+        ComprehensionList();
+        ~ComprehensionList();
+    };
+
+    class RangeList:public Expression
+    {
+
+        ExpressionType getType() const override;
+        int evaluateInt(unsigned int ) const override;
+        bool evaluateBool(unsigned int ) const override;
+        std::string toString() const override;
+
+    public:
+        RangeList();
+        ~RangeList();
+
+    };
 
 }
 #endif //NAZKELL_EXPRESSIONS_H

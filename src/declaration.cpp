@@ -12,16 +12,17 @@ namespace nazkell
         Declaration::Declaration(std::string id, std::vector<Token::Type > args_type):
                 id_(id), args_type_(args_type){}
         Declaration::Declaration(std::string id): id_(id) {}
-        std::string Declaration::getArgType(int)
+        Token::Type Declaration::getArgType(int i)
         {
-
+            return args_type_[i];
         }
         std::string Declaration::getID()
         {
-
+            return id_;
         }
-        std::string Declaration::getRetType()
+        Token::Type Declaration::getRetType()
         {
+            return args_type_[args_type_.size()-1];
 
         }
 
@@ -31,9 +32,9 @@ namespace nazkell
             for( int i = 0 ; i < args_type_.size(); i++)
             {
                 if(i < args_type_.size() - 1)
-                    s << toString(args_type_[i]) << "->";
+                    s << Token::toString(args_type_[i]) << "->";
                 else
-                    s << toString(args_type_[i]) << std::endl;
+                    s << args_type_[i] << std::endl;
             }
             return id_ + "::" + s.str();
         }

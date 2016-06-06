@@ -14,7 +14,7 @@ void readInput(nazkell::Lexer& l)
 void printTest()
 {
     std::fstream fs;
-    fs.open("../test/testfile.nz", std::fstream::in);
+    fs.open("/home/tomasz/ClionProjects/Nazkell/test/testfile.nz", std::fstream::in);
     nazkell::Lexer l(fs);
     readInput(l);
 }

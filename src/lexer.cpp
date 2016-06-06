@@ -3,6 +3,7 @@
 //
 #include <stdexcept>
 #include <lexer.h>
+
 namespace nazkell {
     Lexer::Lexer(std::istream &in_)
             : in(in_) {
@@ -55,7 +56,7 @@ namespace nazkell {
     }
 
     bool Lexer::tryEof() {
-        if (!in.eof())
+        if (!in.eof() || !in)
             return false;
         token = Token();
         return true;

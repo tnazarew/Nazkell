@@ -58,13 +58,14 @@
   l4op        = '|' | '&'   
   l5op        = '>' | '<' | '<=' | '=>' | '=='  
   l6op        = '='  
-
   type        = 'Bool' | 'Int' | 'List'
+  newline     = 'LF'  
+  
   body        = {decl | def}  
   decl        = funid '::' type {'->' type} newline  
   def         = funid id {id} '=' exp newline {exp newline} newline
   exp         = boolean | integer | ifstatement | id | funid '(' {exp} ')' 
-                | ( exp ) | exp1 | list | '!' exp5 |
+                | ( exp ) | exp1 | list 
   exp1        = id l6op exp2 | exp2   
   exp2        = exp2 l5op exp3 | exp3  
   exp3        = exp3 l4op exp4 | exp4  
@@ -72,8 +73,8 @@
   exp5        = exp5 l2op exp6 | exp6  
   exp6        = exp6 l1op exp7 | exp7 
   exp7        = exp
-  ifstatement = 'if' cond newline 'then' newline exp {newline exp} [ newline 'else' newline exp] 'fi' 
-  list        = '['exp {',' exp}] | [comp] | [integer..[integer]']'   
-  comp        = exp {',' exp} '|' id '<-' list {',' id <- list}  
-  cond        = boolean | integer | funid {exp} | exp1 
-  newline     = 'LF'  
+  ifstatement = 'if' exp newline 'then' newline exp {newline exp} [ newline 'else' newline exp] 'fi' 
+  list        = '['{exp}']' | '['comp']' | '['exp..[exp]']'   
+  comp        = exp {',' exp} '|' id '<-' (list | id | funid {exp})  {',' id <- (list | id) | funid {exp}}
+
+  

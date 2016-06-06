@@ -16,22 +16,40 @@ namespace nazkell
     { }
     Expression::ExpressionType IfExpression::getType() const
     {
-
+        return ExpressionType::If;
     }
-    int IfExpression::getValue() const
+    int IfExpression::evaluateInt(unsigned int stackID) const
     {
-
+        if(cond[0]->evaluateBool(stackID))
+        {
+            return ifexp[0]->evaluateInt(stackID);
+        }
+        else
+        {
+            return elseexp[0]->evaluateInt(stackID);
+        }
+    }
+    bool IfExpression::evaluateBool(unsigned int stackID) const
+    {
+        if(cond[0]->evaluateBool(stackID))
+        {
+            return ifexp[0]->evaluateBool(stackID);
+        }
+        else
+        {
+            return elseexp[0]->evaluateBool(stackID);
+        }
     }
     std::string IfExpression::toString() const
     {
         std::ostringstream con, ife, ele, all;
-        for(std::unique_ptr<Expression> i: cond)
+        for(auto& i: cond)
             con << i->toString() << std::endl;
-        for(std::unique_ptr<Expression> i: ifexp)
+        for(auto& i: ifexp)
             ife << i->toString() << std::endl;
-        for(std::unique_ptr<Expression> i: elseexp)
+        for(auto& i: elseexp)
             ele << i->toString() << std::endl;
-        all << "if" << std::endl << con << "then" << std::endl << ife << std::endl << "else" << std::endl << ele;
+        all << "if" << std::endl << con.str() << "then" << std::endl << ife.str() << std::endl << "else" << std::endl << ele.str();
         return all.str();
     }
 }

@@ -4,7 +4,7 @@
 
 #include <operator.h>
 
-std::string nazkell::toString(Operator o)
+const std::string nazkell::toString(Operator o)
 {
     switch(o)
     {

@@ -14,9 +14,16 @@ namespace nazkell
         std::string did;
         std::vector<std::string> args;
         std::vector<std::unique_ptr<Expression> > expressions;
+
     public:
         Definition();
-        Definition(std::string, std::vector<std::unique_ptr<Expression > >);
+        Definition(std::string, std::vector<std::string> args_, std::vector<std::unique_ptr<Expression > >);
+        std::string toString() const;
+        std::string getID();
+        int evaluateInt(unsigned int) const;
+        bool evaluateBool(unsigned int) const;
+        std::vector<std::string > getArgs();
+        Expression::ExpressionType getType() const;
     };
 }
 #endif //NAZKELL_DEFINITION_H

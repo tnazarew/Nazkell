@@ -20,7 +20,7 @@ namespace nazkell
     {
 
     public:
-        Parser(Lexer lexer);
+        Parser(std::unique_ptr<Lexer> lexer);
         ~Parser();
 
         std::unique_ptr<Body> parse();
@@ -46,13 +46,12 @@ namespace nazkell
         std::unique_ptr<Expression> readList();
         std::unique_ptr<Expression> readFunction();
         std::unique_ptr<Expression> readVariable();
-        std::unique_ptr<Expression> readNegation();
-        std::unique_ptr<Expression> readCondition();
 
 
-        std::unique_ptr<Expression> readBinaryExpression(std::unique_ptr<Expression> leftOper);
 
-        Operator readOperator();
+
+
+
 
         void throwOnUnexpectedInput(Token::Type expected);
         void throwOnUnexpectedInput(std::vector<Token::Type> expected);
@@ -62,7 +61,7 @@ namespace nazkell
         void advance();
         Token::Type getTokenType();
         bool isOperator();
-        Lexer lexer;
+        std::unique_ptr<Lexer> lexer;
     };
 }
 #endif //NAZKELL_PARSER_H

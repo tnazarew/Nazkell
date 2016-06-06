@@ -24,7 +24,10 @@ add_library(${PROJECT_NAME}
         src/if_expression.cpp
         src/function_expression.cpp
         src/declaration.cpp
-        src/definition.cpp)
+        src/definition.cpp
+        src/simple_list.cpp
+        src/comprehension_list.cpp
+        src/range_list.cpp include/stack_function.h)
 
 add_executable(lexer_test test/lexer_test.cpp)
 target_link_libraries(lexer_test ${PROJECT_NAME})

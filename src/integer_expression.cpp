@@ -12,11 +12,15 @@ namespace nazkell
     { }
     Expression::ExpressionType IntegerExpression::getType() const
     {
-
+        return ExpressionType::Integer;
     }
-    int IntegerExpression::getValue() const
+    int IntegerExpression::evaluateInt(unsigned int stackID) const
     {
-
+        return value;
+    }
+    bool IntegerExpression::evaluateBool(unsigned int stackID) const
+    {
+        throwWrongType(ExpressionType::Integer);
     }
     std::string IntegerExpression::toString() const
     {

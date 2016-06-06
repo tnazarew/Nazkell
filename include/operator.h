@@ -28,7 +28,8 @@ namespace nazkell
             Assign
         };
 
-    std::string toString(Operator o);
+    //std::string toString(Operator o);
+    const std::string toString(Operator o);
     inline std::ostream& operator<<(std::ostream& out, Operator o) { return out << toString(o); }
 
 }
