@@ -47,34 +47,28 @@ namespace nazkell
                 type = Type::Operator2;
                 break;
             case Operator::Or:
-                type = Type::Operator4;
+                type = Type::Operator5;
                 break;
             case Operator::And:
-                type = Type::Operator4;
-                break;
-            case Operator::Not:
-                type = Type::Not;
+                type = Type::Operator5;
                 break;
             case Operator::Greater:
-                type = Type::Operator5;
+                type = Type::Operator4;
                 break;
             case Operator::Less:
-                type = Type::Operator5;
+                type = Type::Operator4;
                 break;
             case Operator::Equal:
-                type = Type::Operator5;
+                type = Type::Operator4;
                 break;
             case Operator::EqOrGreater:
-                type = Type::Operator5;
+                type = Type::Operator4;
                 break;
             case Operator::EqOrLess:
-                type = Type::Operator5;
-                break;
-            case Operator::Assign:
-                type = Type::Operator6;
+                type = Type::Operator4;
                 break;
             case Operator::NotEqual:
-                type = Type::Operator5;
+                type = Type::Operator4;
                 break;
         }
     }
@@ -86,14 +80,8 @@ namespace nazkell
             case ReservedID::If:
                 type = Type::If;
                 break;
-            case ReservedID::Then:
-                type = Type::Then;
-                break;
             case ReservedID::Else:
                 type = Type::Else;
-                break;
-            case ReservedID::Fi:
-                type = Type::Fi;
                 break;
             case ReservedID::Bool:
                 type = Type::Bool;
@@ -114,29 +102,17 @@ namespace nazkell
             case Symbol::BracketClose:
                 type = Type::BracketClose;
                 break;
-            case Symbol::SBracketOpen:
-                type = Type::SBracketOpen;
-                break;
-            case Symbol::SBracketClose:
-                type = Type::SBracketClose;
-                break;
-            case Symbol::Comma:
-                type = Type::Comma;
-                break;
             case Symbol::Right:
                 type = Type::Right;
-                break;
-            case Symbol::Left:
-                type = Type::Left;
-                break;
-            case Symbol::DoubleDot:
-                type = Type::DoubleDot;
                 break;
             case Symbol::Colon:
                 type = Type::Colon;
                 break;
             case Symbol::NewLine:
                 type = Type::NewLine;
+                break;
+            case Symbol::EqSign:
+                type = Type::EqSign;
                 break;
         }
     }
@@ -166,18 +142,8 @@ namespace nazkell
                 return "BracketOpen";
             case Token::Type::BracketClose:
                 return "BracketClose";
-            case Token::Type::SBracketOpen:
-                return "SBracketOpen";
-            case Token::Type::SBracketClose:
-                return "SBracketClose";
-            case Token::Type::Comma:
-                return "Comma";
             case Token::Type::Right:
                 return "Right";
-            case Token::Type::Left:
-                return "Left";
-            case Token::Type::DoubleDot:
-                return "DoubleDot";
             case Token::Type::Colon:
                 return "Colon";
             case Token::Type::NewLine:
@@ -192,24 +158,20 @@ namespace nazkell
                 return "operator4";
             case Token::Type::Operator5:
                 return "operator5";
-            case Token::Type::Operator6:
-                return "operator6";
+            case Token::Type::EqSign:
+                return "=";
             case Token::Type::Boolean:
                 return "boolean";
             case Token::Type::Integer:
                 return "integer";
             case Token::Type::Bool:
-                return "Bool";
+                return "bool";
             case Token::Type::Int:
-                return "Int";
+                return "int";
             case Token::Type::If:
                 return "If";
-            case Token::Type::Then:
-                return "Then";
             case Token::Type::Else:
                 return "Else";
-            case Token::Type::Fi:
-                return "Fi";
             case Token::Type::Id:
                 return "Id";
             case Token::Type::Fid:
@@ -222,19 +184,17 @@ namespace nazkell
     std::string Token::valueToString() const
     {
         if(type == Type::BracketOpen    || type == Type::BracketClose   ||
-           type == Type::SBracketOpen   || type == Type::SBracketClose  ||
-           type == Type::Comma          || type == Type::Right          ||
-           type == Type::Left           || type == Type::DoubleDot      ||
-           type == Type::Colon          || type == Type::NewLine
+           type == Type::Right          || type == Type::Colon          ||
+           type == Type::NewLine        || type == Type::EqSign
         )
             return "(" + nazkell::toString(getSymbol()) + ")";
         else if(type == Type::Operator1  || type == Type::Operator2   ||
                 type == Type::Operator3  || type == Type::Operator4   ||
-                type == Type::Operator5  || type == Type::Operator6
+                type == Type::Operator5
                 )
             return "(" + nazkell::toString(getOperator()) + ")";
         else if(type == Type::Bool || type == Type::Int || type == Type::If ||
-                type == Type::Then || type == Type::Else || type == Type::Fi
+                type == Type::Else
                 )
             return "(" + nazkell::toString(getReserverdID()) + ")";
         else if(type == Type::Integer)

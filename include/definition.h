@@ -7,23 +7,23 @@
 #include <vector>
 #include <expression.h>
 #include <string>
+#include <value.h>
 namespace nazkell
 {
     class Definition
     {
         std::string did;
         std::vector<std::string> args;
-        std::vector<std::unique_ptr<Expression> > expressions;
+        std::unique_ptr<Expression> expressions;
 
     public:
         Definition();
-        Definition(std::string, std::vector<std::string> args_, std::vector<std::unique_ptr<Expression > >);
+        Definition(std::string, std::vector<std::string> args_, std::unique_ptr<Expression>);
         std::string toString() const;
         std::string getID();
-        int evaluateInt(unsigned int) const;
-        bool evaluateBool(unsigned int) const;
+        Value evaluate(unsigned int) const;
         std::vector<std::string > getArgs();
-        Expression::ExpressionType getType() const;
+
     };
 }
 #endif //NAZKELL_DEFINITION_H

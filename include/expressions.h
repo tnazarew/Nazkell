@@ -5,20 +5,21 @@
 #ifndef NAZKELL_EXPRESSIONS_H
 #define NAZKELL_EXPRESSIONS_H
 
-#include <expression.h>
+
 #include <memory>
 #include <operator.h>
 #include <vector>
+#include <expression.h>
 namespace nazkell
 {
     class BooleanExpression : public Expression
     {
         ExpressionType getType() const override;
-        int evaluateInt(unsigned int stackID) const override;
-        bool evaluateBool(unsigned int stackID) const override;
+
+        Value evaluate(unsigned int) const override;
 
         std::string toString() const override;
-        bool value;
+        Value value;
     public:
         BooleanExpression(bool);
         ~BooleanExpression();
@@ -26,10 +27,10 @@ namespace nazkell
     class IntegerExpression : public Expression
     {
         ExpressionType getType() const override;
-        int evaluateInt(unsigned int ) const override;
-        bool evaluateBool(unsigned int ) const override;
+
+        Value evaluate(unsigned int) const override;
         std::string toString() const override;
-        int value;
+        Value value;
     public:
         IntegerExpression(int);
         ~IntegerExpression();
@@ -40,23 +41,23 @@ namespace nazkell
     };
     class IfExpression : public Expression
     {
-        std::vector<std::unique_ptr<Expression> > cond, ifexp, elseexp;
+        std::unique_ptr<Expression> cond, ifexp, elseexp;
         ExpressionType getType() const override;
-        int evaluateInt(unsigned int ) const override;
-        bool evaluateBool(unsigned int ) const override;
+
+        Value evaluate(unsigned int) const override;
         std::string toString() const override;
     public:
-        IfExpression(std::vector<std::unique_ptr<Expression> > cond_,
-                               std::vector<std::unique_ptr<Expression> > ifexp_,
-                               std::vector<std::unique_ptr<Expression> > elseexp_);
+        IfExpression(std::unique_ptr<Expression> cond_,
+                     std::unique_ptr<Expression> ifexp_,
+                     std::unique_ptr<Expression> elseexp_);
         ~IfExpression();
     };
     class VariableExpression : public Expression
     {
         std::string id;
         ExpressionType getType() const override;
-        int evaluateInt(unsigned int ) const override;
-        bool evaluateBool(unsigned int ) const override;
+
+        Value evaluate(unsigned int) const override;
         std::string toString() const override;
     public:
         std::string getID() const ;
@@ -68,8 +69,8 @@ namespace nazkell
         std::string id;
         std::vector<std::shared_ptr<Expression> > arguments;
         ExpressionType getType() const override;
-        int evaluateInt(unsigned int ) const override;
-        bool evaluateBool(unsigned int ) const override;
+
+        Value evaluate(unsigned int) const override;
         std::string toString() const override;
     public:
         FunctionExpression(std::string id_, std::vector<std::shared_ptr<Expression> > arguments_);
@@ -80,10 +81,10 @@ namespace nazkell
         Operator op;
         std::unique_ptr<Expression> left, right;
         ExpressionType getType() const override;
-        int evaluateInt(unsigned int ) const override;
-        bool evaluateBool(unsigned int ) const override;
+
+        Value evaluate(unsigned int) const override;
         std::string toString() const override;
-        int power(const int, const int) const;
+        Value power(const Value, const Value) const;
     public:
         OperatorExpression(std::unique_ptr<Expression> l, Operator o, std::unique_ptr<Expression> r);
         ~OperatorExpression();
@@ -92,8 +93,8 @@ namespace nazkell
     {
 
         ExpressionType getType() const override;
-        int evaluateInt(unsigned int ) const override;
-        bool evaluateBool(unsigned int ) const override;
+
+        Value evaluate(unsigned int) const override;
         std::string toString() const override;
     public:
         SimpleList();
@@ -104,8 +105,8 @@ namespace nazkell
     {
 
         ExpressionType getType() const override;
-        int evaluateInt(unsigned int ) const override;
-        bool evaluateBool(unsigned int ) const override;
+
+        Value evaluate(unsigned int) const override;
         std::string toString() const override;
 
     public:
@@ -117,8 +118,8 @@ namespace nazkell
     {
 
         ExpressionType getType() const override;
-        int evaluateInt(unsigned int ) const override;
-        bool evaluateBool(unsigned int ) const override;
+
+        Value evaluate(unsigned int) const override;
         std::string toString() const override;
 
     public:

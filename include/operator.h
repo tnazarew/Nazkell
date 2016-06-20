@@ -18,14 +18,12 @@ namespace nazkell
             Devide,
             Or,
             And,
-            Not,
             Greater,
             Less,
             Equal,
             NotEqual,
             EqOrGreater,
             EqOrLess,
-            Assign
         };
 
     //std::string toString(Operator o);

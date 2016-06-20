@@ -13,16 +13,15 @@ namespace nazkell
     {
         return ExpressionType::Boolean;
     }
-    int BooleanExpression::evaluateInt(unsigned int stackID) const
+    Value BooleanExpression::evaluate(unsigned int stackID) const
     {
-        throwWrongType(ExpressionType::Boolean);
-    }
-    bool BooleanExpression::evaluateBool(unsigned int stackID) const
-    {
+        if(value.value_type == Value::Type::Integer)
+            throwWrongType(ExpressionType::Boolean);
         return value;
     }
+
     std::string BooleanExpression::toString() const
     {
-        return std::to_string(value);
+        return std::to_string(value.b);
     }
 }

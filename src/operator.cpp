@@ -23,8 +23,6 @@ const std::string nazkell::toString(Operator o)
             return "|";
         case Operator::And:
             return "&";
-        case Operator::Not:
-            return "!";
         case Operator::Greater:
             return ">";
         case Operator::Less:
@@ -35,8 +33,6 @@ const std::string nazkell::toString(Operator o)
             return ">=";
         case Operator::EqOrLess:
             return "<=";
-        case Operator::Assign:
-            return "=";
         case Operator::NotEqual:
             return "!=";
     }

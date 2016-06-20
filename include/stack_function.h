@@ -15,10 +15,11 @@ namespace nazkell
     struct StackFunction
     {
         std::string name;
-        std::vector<std::pair<std::string, std::shared_ptr<Expression> > > args;
+        std::vector<std::pair<std::string, std::shared_ptr<Expression> > > functions;
         unsigned int parent_stack_id;
-        StackFunction(std::vector<std::pair<std::string, std::shared_ptr<Expression> > > args_, std::string name_,
-                                     unsigned int parent_stack_id)
+        StackFunction(std::vector<std::pair<std::string, std::shared_ptr<Expression>>> args_, std::string name_,
+                      unsigned int parent_stack_id):
+                    functions(args_), name(name_), parent_stack_id(parent_stack_id)
         {
 
         }
@@ -26,6 +27,10 @@ namespace nazkell
         StackFunction()
         {
 
+        }
+
+        ~StackFunction(){
+            functions.clear();
         }
     };
 }

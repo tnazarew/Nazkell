@@ -16,61 +16,52 @@ namespace nazkell
         return ExpressionType::Operator;
     }
 
-    int OperatorExpression::power(const int base, const  int denominator) const
+    Value OperatorExpression::power(const Value base, const  Value denominator) const
     {
-        if(base >= 0 && denominator >= 0)
+        if(base.i >= 0 && denominator.i >= 0)
             throwWrongType(ExpressionType::Integer); // INVALID COMMUNICATE, CHANGE TO MORE APPROPRIATE
-        int res = 1;
-        for(int i = 0 ; i <= denominator; i++)
-            res *= base;
+        Value res;
+        res.i = 1;
+        for(int i = 0 ; i <= denominator.i; i++)
+            res.i *= base.i;
         return res;
     }
-    int OperatorExpression::evaluateInt(unsigned int stackID) const
+
+
+    Value OperatorExpression::evaluate(unsigned int stackID) const
     {
-        switch(op)
+//        std::cout << "TEST: " << toString() << std::endl;
+        switch (op)
         {
             case Operator::Plus:
-                return left->evaluateInt(stackID) + right->evaluateInt(stackID);
+                return left->evaluate(stackID).expectType(Value::Type::Integer).i + right->evaluate(stackID).expectType(Value::Type::Integer).i;
             case Operator::Minus:
-                return left->evaluateInt(stackID) - right->evaluateInt(stackID);
+                return left->evaluate(stackID).expectType(Value::Type::Integer).i - right->evaluate(stackID).expectType(Value::Type::Integer).i;
             case Operator::Power:
-                return power(left->evaluateInt(stackID), right->evaluateInt(stackID));
+                return power(left->evaluate(stackID).expectType(Value::Type::Integer), right->evaluate(stackID).expectType(Value::Type::Integer));
             case Operator::Multiply:
-                return left->evaluateInt(stackID) * right->evaluateInt(stackID);
+                return left->evaluate(stackID).expectType(Value::Type::Integer).i * right->evaluate(stackID).expectType(Value::Type::Integer).i;
             case Operator::Devide:
-                return left->evaluateInt(stackID) / right->evaluateInt(stackID);
-            default:
-                throwWrongType(ExpressionType::Integer);
-
-        }
-    }
-    bool OperatorExpression::evaluateBool(unsigned int stackID) const
-    {
-        switch(op)
-        {
+                return left->evaluate(stackID).expectType(Value::Type::Integer).i / right->evaluate(stackID).expectType(Value::Type::Integer).i;
             case Operator::Or:
-                return left->evaluateBool(stackID) || right->evaluateBool(stackID);
+                return left->evaluate(stackID).expectType(Value::Type::Bool).b || right->evaluate(stackID).expectType(Value::Type::Bool).b;
             case Operator::And:
-                return left->evaluateBool(stackID) && right->evaluateBool(stackID);
+                return left->evaluate(stackID).expectType(Value::Type::Bool).b && right->evaluate(stackID).expectType(Value::Type::Bool).b;
             case Operator::Greater:
-                return left->evaluateBool(stackID) > right->evaluateBool(stackID);
+                return left->evaluate(stackID).expectType(Value::Type::Integer).i > right->evaluate(stackID).expectType(Value::Type::Integer).i;
             case Operator::Less:
-                return left->evaluateBool(stackID) < right->evaluateBool(stackID);
+                return left->evaluate(stackID).expectType(Value::Type::Integer).i < right->evaluate(stackID).expectType(Value::Type::Integer).i;
             case Operator::Equal:
-                return left->evaluateBool(stackID) == right->evaluateBool(stackID);
+                return Value(left->evaluate(stackID) == right->evaluate(stackID));
             case Operator::NotEqual:
-                return left->evaluateBool(stackID) != right->evaluateBool(stackID);
+                return Value(left->evaluate(stackID) != right->evaluate(stackID));
             case Operator::EqOrGreater:
-                return left->evaluateBool(stackID) >= right->evaluateBool(stackID);
+                return left->evaluate(stackID).expectType(Value::Type::Integer).i >= right->evaluate(stackID).expectType(Value::Type::Integer).i ;
             case Operator::EqOrLess:
-                return left->evaluateBool(stackID) <= right->evaluateBool(stackID);
-            case Operator::Assign:
-
-                return right->evaluateBool(stackID);
-            default:
-                throwWrongType(ExpressionType::Boolean);
+                return left->evaluate(stackID).expectType(Value::Type::Integer).i <= right->evaluate(stackID).expectType(Value::Type::Integer).i ;
         }
     }
+
     std::string OperatorExpression::toString() const
     {
         return left->toString() + " " + nazkell::toString(op) +  " " + right->toString();

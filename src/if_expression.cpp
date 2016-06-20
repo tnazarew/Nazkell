@@ -7,9 +7,9 @@
 
 namespace nazkell
 {
-    IfExpression::IfExpression(std::vector<std::unique_ptr<Expression> > cond_,
-                               std::vector<std::unique_ptr<Expression> > ifexp_,
-                               std::vector<std::unique_ptr<Expression> > elseexp_)
+    IfExpression::IfExpression(std::unique_ptr<Expression> cond_,
+                               std::unique_ptr<Expression> ifexp_,
+                               std::unique_ptr<Expression> elseexp_)
             :cond(std::move(cond_)), ifexp(std::move(ifexp_)), elseexp(std::move(elseexp_))
     {}
     IfExpression::~IfExpression()
@@ -18,38 +18,23 @@ namespace nazkell
     {
         return ExpressionType::If;
     }
-    int IfExpression::evaluateInt(unsigned int stackID) const
+
+    Value IfExpression::evaluate(unsigned int stackID) const
     {
-        if(cond[0]->evaluateBool(stackID))
+        if(cond->evaluate(stackID).expectType(Value::Type::Bool).b)
         {
-            return ifexp[0]->evaluateInt(stackID);
+            return ifexp->evaluate(stackID);
         }
         else
         {
-            return elseexp[0]->evaluateInt(stackID);
+            return elseexp->evaluate(stackID);
         }
     }
-    bool IfExpression::evaluateBool(unsigned int stackID) const
-    {
-        if(cond[0]->evaluateBool(stackID))
-        {
-            return ifexp[0]->evaluateBool(stackID);
-        }
-        else
-        {
-            return elseexp[0]->evaluateBool(stackID);
-        }
-    }
+
     std::string IfExpression::toString() const
     {
-        std::ostringstream con, ife, ele, all;
-        for(auto& i: cond)
-            con << i->toString() << std::endl;
-        for(auto& i: ifexp)
-            ife << i->toString() << std::endl;
-        for(auto& i: elseexp)
-            ele << i->toString() << std::endl;
-        all << "if" << std::endl << con.str() << "then" << std::endl << ife.str() << std::endl << "else" << std::endl << ele.str();
+        std::ostringstream all;
+        all << "if" << " " << cond->toString() << std::endl << ifexp->toString() << std::endl << "else" << std::endl <<  elseexp->toString() ;
         return all.str();
     }
 }

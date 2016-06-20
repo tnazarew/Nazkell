@@ -8,29 +8,45 @@
 #include <declaration.h>
 #include <definition.h>
 #include <stack_function.h>
+#include <map>
+
 namespace nazkell
 {
     class Body
     {
-        std::vector< std::unique_ptr<Definition> > definitions;
-        std::vector< std::unique_ptr<Declaration> > declarations;
+        std::map<std::string, std::shared_ptr<Definition> > definitions;
+        std::map<std::string, std::unique_ptr<Declaration> > declarations;
         std::vector<struct StackFunction> stack;
         unsigned int highWaterMark;
+
         Body();
-        Body(std::vector< std::unique_ptr<Declaration> >, std::vector< std::unique_ptr<Definition> >);
-        static Body* body;
+
+        Body(std::map<std::string, std::unique_ptr<Declaration>>, std::map<std::string, std::shared_ptr<Definition>>);
+
+        static Body *body;
     public:
-        static Body& getInstance();
-        static Body& init(std::vector< std::unique_ptr<Declaration> >, std::vector< std::unique_ptr<Definition> >);
-        int evaluateInt(std::vector<std::shared_ptr<Expression> > args, std::string fid, const unsigned int parent_stock_id);
-        bool evaluateBool(std::vector<std::shared_ptr<Expression> > args, std::string fid, const unsigned int parent_stock_id);
-        bool checkType(std::string, const Expression::ExpressionType);
-        unsigned int pushStack(std::vector<std::pair<std::string, std::shared_ptr<Expression> > > temp_args, std::string fid);
+        static Body &getInstance();
+
+        static Body &init(std::map<std::string, std::unique_ptr<Declaration>>,
+                          std::map<std::string, std::shared_ptr<Definition>>);
+
+        ~Body();
+
+        Value evaluate(const std::vector<std::shared_ptr<Expression>> &args, std::string fid);
+
+        void resetStack();
+
+        unsigned int pushStack(const std::vector<std::pair<std::string, std::shared_ptr<Expression>>>& temp_args,
+                               const std::string& fid);
+
         void popStack();
-        unsigned getHWM();
-        int evaluateInt(unsigned int, std::string);
-        bool evaluateBool(unsigned int, std::string);
-        std::unique_ptr<Definition> getDef(std::string);
+
+        void throwFunctionNotDeclared(const std::string&);
+
+        Value evaluate(unsigned int, const std::string&);
+
+        std::shared_ptr<Definition> getDef(const std::string&);
+
         std::string toString();
 
     };

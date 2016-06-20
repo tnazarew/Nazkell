@@ -4,32 +4,34 @@
 #include <stdexcept>
 #include <lexer.h>
 
-namespace nazkell {
+namespace nazkell
+{
     Lexer::Lexer(std::istream &in_)
-            : in(in_) {
+            : in(in_)
+    {
     }
 
-    Token Lexer::getToken() const {
+    Token Lexer::getToken() const
+    {
         return token;
     }
 
-    void Lexer::readNextToken() {
+    void Lexer::readNextToken()
+    {
         ignoreWhitespaces();
         if (tryEof())
             return;
         throwOnStreamError();
-        if(tryNewLine())
-            return;
         std::string input;
         if (tryOperatorOrSymbol())
             return;
-        else if(tryInteger())
+        else if (tryInteger())
             return;
         else
         {
             input = readStringOfLetters();
-            if (tryBoolean(input) || tryReservedID(input)
-                || tryIdentificator(input))
+            if (input != "" && (tryBoolean(input) || tryReservedID(input)
+                || tryIdentificator(input)))
                 return;
         }
 
@@ -47,7 +49,7 @@ namespace nazkell {
     std::string Lexer::readStringOfLetters()
     {
         std::string buf;
-        if(in && (std::islower(in.peek()) || std::isupper(in.peek())))
+        if (in && (std::islower(in.peek()) || std::isupper(in.peek())))
             do
                 buf += static_cast<char>(in.get());
             while (in && (std::isdigit(in.peek()) || std::isupper(in.peek()) || std::islower(in.peek())));
@@ -55,39 +57,43 @@ namespace nazkell {
         return buf;
     }
 
-    bool Lexer::tryEof() {
+    bool Lexer::tryEof()
+    {
         if (!in.eof() || !in)
             return false;
         token = Token();
         return true;
     }
 
-    void Lexer::ignoreWhitespaces() {
-        while (!in.eof() && std::isspace(in.peek()) && in.peek() != 0x0a)
+    void Lexer::ignoreWhitespaces()
+    {
+        while (!in.eof() && std::isspace(in.peek()))
             in.get();
 
     }
 
-    void Lexer::throwOnStreamError() {
+    void Lexer::throwOnStreamError()
+    {
         if (!in)
             throw std::runtime_error("Error while reading from input");
 
     }
 
-    void Lexer::throwUnknownToken() {
+    void Lexer::throwUnknownToken()
+    {
         const std::string msg = "Unknown token, starting with: ";
         throw std::runtime_error(msg + static_cast<char>(in.get()));
     }
 
-    bool Lexer::tryBoolean(const std::string& in)
+    bool Lexer::tryBoolean(const std::string &in)
     {
 
-        if(in == "True")
+        if (in == "True")
         {
             token = Token(true);
             return true;
         }
-        else if(in == "False")
+        else if (in == "False")
         {
             token = Token(false);
             return true;
@@ -98,23 +104,23 @@ namespace nazkell {
     bool Lexer::tryOperatorOrSymbol()
     {
 
-        switch(in.peek())
+        switch (in.peek())
         {
             case '+':
                 in.get();
                 token = Operator::Plus;
                 return true;
             case '-':
-                if(in.get() && in.peek()=='>')
+                if (in.get() && in.peek() == '>')
                 {
                     in.get();
                     token = Symbol::Right;
                 }
                 else
-                token = Operator::Minus;
+                    token = Operator::Minus;
                 return true;
             case '*':
-                if(in.get() && in.peek()=='*')
+                if (in.get() && in.peek() == '*')
                 {
                     in.get();
                     token = Operator::Power;
@@ -135,16 +141,15 @@ namespace nazkell {
                 token = Operator::And;
                 return true;
             case '!':
-                if (in.get() &&  in.peek() == '=')
+                if (in.get() && in.peek() == '=')
                 {
                     in.get();
-                    token = Operator::Not;
-                }
-                else
                     token = Operator::NotEqual;
-                return true;
+                    return true;
+                }
+                return false;
             case '>':
-                if(in.get() && in.peek()=='=')
+                if (in.get() && in.peek() == '=')
                 {
                     in.get();
                     token = Operator::EqOrGreater;
@@ -153,38 +158,25 @@ namespace nazkell {
                     token = Operator::Greater;
                 return true;
             case '<':
-                if(in.get() && in.peek() == '=')
+                if (in.get() && in.peek() == '=')
                 {
                     in.get();
                     token = Operator::EqOrLess;
-                }
-                else if(in.peek() == '-')
-                {
-                    in.get();
-                    token = Symbol::Left;
                 }
                 else
                     token = Operator::Less;
                 return true;
             case '=':
-                if(in.get() && in.peek()=='=')
+                if (in.get() && in.peek() == '=')
                 {
                     in.get();
                     token = Operator::Equal;
                 }
                 else
-                    token = Operator::Assign;
+                    token = Symbol::EqSign;
                 return true;
-            case '.':
-                if(in.get() && in.peek()=='.')
-                {
-                    in.get();
-                    token = Symbol::DoubleDot;
-                    return true;
-                }
-                return false;
             case ':':
-                if(in.get() && in.peek()==':')
+                if (in.get() && in.peek() == ':')
                 {
                     in.get();
                     token = Symbol::Colon;
@@ -193,23 +185,11 @@ namespace nazkell {
                 return false;
             case '(':
                 in.get();
-                token = Symbol::BracketOpen ;
+                token = Symbol::BracketOpen;
                 return true;
             case ')':
                 in.get();
                 token = Symbol::BracketClose;
-                return true;
-            case '[':
-                in.get();
-                token = Symbol::SBracketOpen;
-                return true;
-            case ']':
-                in.get();
-                token = Symbol::SBracketClose;
-                return true;
-            case ',':
-                in.get();
-                token = Symbol::Comma;
                 return true;
 
             default:
@@ -218,37 +198,29 @@ namespace nazkell {
 
     }
 
-    bool Lexer::tryIdentificator(const std::string& in)
+    bool Lexer::tryIdentificator(const std::string &in)
     {
-            token = Token(in);
-            return true;
+        token = Token(in);
+        return true;
     }
 
-    bool Lexer::tryReservedID(const std::string& in)
+    bool Lexer::tryReservedID(const std::string &in)
     {
-        if(in == "if")
+        if (in == "if")
         {
             token = ReservedID::If;
             return true;
         }
-        else if(in == "else")
+        else if (in == "else")
         {
             token = ReservedID::Else;
             return true;
         }
-        else if(in == "then")
-        {
-            token = ReservedID::Then;
-            return true;
-        }else if(in == "fi")
-        {
-            token = ReservedID::Fi;
-            return true;
-        }else if(in == "bool")
+         else if (in == "bool")
         {
             token = ReservedID::Bool;
             return true;
-        }else if(in == "int")
+        } else if (in == "int")
         {
             token = ReservedID::Int;
             return true;
@@ -264,14 +236,6 @@ namespace nazkell {
         token = Token(std::stoi(buf));
         return true;
     }
-    bool Lexer::tryNewLine()
-    {
-        if(in.peek() == 0x0a)
-        {
-            in.get();
-            token = Symbol::NewLine;
-            return true;
-        }
-        return false;
-    }
+
+
 }

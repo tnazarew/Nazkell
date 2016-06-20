@@ -36,4 +36,5 @@ namespace nazkell
         throw std::runtime_error("Wrong type:" + nazkell::toString(getType()) +
                                                  " required: " + nazkell::toString(et));
     }
+
 }

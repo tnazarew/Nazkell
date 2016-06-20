@@ -14,16 +14,21 @@ namespace nazkell
     {
         return ExpressionType::Integer;
     }
-    int IntegerExpression::evaluateInt(unsigned int stackID) const
+
+    Value IntegerExpression::evaluate(unsigned int stackID) const
     {
+        if (value.value_type == Value::Type::Bool)
+        {
+            throwWrongType(ExpressionType::Integer);
+        }
         return value;
     }
-    bool IntegerExpression::evaluateBool(unsigned int stackID) const
-    {
-        throwWrongType(ExpressionType::Integer);
-    }
+
+
+
+
     std::string IntegerExpression::toString() const
     {
-        return std::to_string(value);
+        return std::to_string(value.i);
     }
 }

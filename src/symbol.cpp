@@ -12,18 +12,10 @@ std::string nazkell::toString(Symbol s)
             return "(";
         case Symbol::BracketClose:
             return ")";
-        case Symbol::SBracketOpen:
-            return "[";
-        case Symbol::SBracketClose:
-            return "]";
-        case Symbol::Comma:
-            return ",";
         case Symbol::Right:
             return "->";
-        case Symbol::Left:
-            return "<-";
-        case Symbol::DoubleDot:
-            return "..";
+        case Symbol::EqSign:
+            return "=";
         case Symbol::Colon:
             return "::";
         case Symbol::NewLine:

@@ -14,14 +14,10 @@ namespace nazkell
     {
         BracketOpen,
         BracketClose,
-        SBracketOpen,
-        SBracketClose,
-        Comma,
         Right,
-        Left,
-        DoubleDot,
         Colon,
         NewLine,
+        EqSign,
     };
 
     std::string toString(Symbol o);

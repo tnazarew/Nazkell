@@ -13,8 +13,8 @@ namespace nazkell
         std::string id_;
         std::vector <Token::Type> args_type_;
     public:
-        Declaration(std::string id, std::vector<Token::Type > args_type);
-        Declaration(std::string id);
+        Declaration(const std::string &id, const std::vector<Token::Type >& args_type);
+        Declaration(const std::string &id);
         Token::Type getArgType(int);
         std::string getID();
         Token::Type getRetType();
