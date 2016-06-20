@@ -50,29 +50,28 @@
   integer     = digit {digit}  
   id          = (small {small | large | digit})  
   funid       = (large {small | large | digit})  
-  reservedid  = 'else' | 'if'
-  op          = l1op | l2op | l3op | l4op | l5op
+  reservedid  = 'else' | 'if'  
+  op          = l1op | l2op | l3op | l4op | l5op  
   l1op        = '** '  
   l2op        = '* ' | '\'  
   l3op        = '+' | '-'  
-  l4op        = '>' | '<' | '<=' | '=>' | '=='     
-  l5op        = '|' | '&'
-  type        = 'Bool' | 'Int' 
+  l4op        = '>' | '<' | '<=' | '=>' | '=='  
+  l5op        = '|' | '&'  
+  type        = 'Bool' | 'Int'  
   newline     = 'LF'  
-  
   body        = {decl | def}  
-  decl        = funid '::' type {'->' type}   
-  def         = funid id {id} '=' exp 
-  exp         = boolean | integer | ifstatement | id | funid '(' {exp} ')' 
-                | ( exp ) | exp1
-  exp1        = id l6op exp2 | exp2   
+  decl        = funid '::' type {'->' type}  
+  def         = funid id {id} '=' exp  
+  exp         = boolean | integer | ifstatement | id | funid '(' {exp} ')'  
+                | ( exp ) | exp1  
+  exp1        = id l6op exp2 | exp2  
   exp2        = exp2 l5op exp3 | exp3  
   exp3        = exp3 l4op exp4 | exp4  
   exp4        = exp4 l3op exp5 | exp5  
   exp5        = exp5 l2op exp6 | exp6  
-  exp6        = exp6 l1op exp7 | exp7 
-  exp7        = exp
-  ifstatement = 'if' exp exp 'else' exp 
+  exp6        = exp6 l1op exp7 | exp7  
+  exp7        = exp  
+  ifstatement = 'if' exp exp 'else' exp  
 
 ###Grammar Rules
 
