@@ -58,7 +58,6 @@
   l4op        = '>' | '<' | '<=' | '=>' | '=='  
   l5op        = '|' | '&'  
   type        = 'Bool' | 'Int'  
-  newline     = 'LF'  
   body        = {decl | def}  
   decl        = funid '::' type {'->' type}  
   def         = funid id {id} '=' exp  
