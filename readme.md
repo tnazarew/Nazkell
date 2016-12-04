@@ -1,4 +1,4 @@
-#Nazkell Project - Simple function language interpreter
+#Nazkell Project - Simple lazy function language interpreter
 
 ###requirements
 
@@ -36,14 +36,13 @@
   pattern<pattern'> - elements from pattern but not from pattern'  
 ###syntax:
   program     = {token | whitespace} 'EOF'  
-  whitespace  = whitesymbol {whitesymbol}  
-  whitesymbol = newline | space | tab  
+  whitespace  = newline | space | tab  
   tab         = horizontal tab  
   space       = a space  
   small       = 'a' | 'b' | ... | 'z'  
   large       = 'A' | 'B' | ... | 'Z'  
   digit       = '0' | '1' | ... | '9'  
-  special     = '(' | ')' | ',' | '[' | ']' | '->' | '<-' | '..' | '::'  
+  special     = '(' | ')' | ',' | '->' | '::'  
   token       =	literal | special | op | reservedid  
   literal     = integer | boolean  
   boolean     = 'True' | 'False'  

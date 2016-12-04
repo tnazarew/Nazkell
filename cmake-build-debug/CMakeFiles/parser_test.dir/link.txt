@@ -1,0 +1,1 @@
+/usr/bin/c++    -std=c++1y -g   CMakeFiles/parser_test.dir/test/parser_tests.cpp.o  -o parser_test -rdynamic libNazkell.a -lboost_filesystem -lboost_system -lboost_unit_test_framework 

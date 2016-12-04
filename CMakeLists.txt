@@ -15,7 +15,6 @@ add_library(${PROJECT_NAME}
         src/token.cpp
         src/parser.cpp
         src/expression.cpp
-        src/value_type.cpp
         src/body.cpp
         src/operator_expression.cpp
         src/boolean_expression.cpp

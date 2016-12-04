@@ -216,11 +216,11 @@ namespace nazkell
             token = ReservedID::Else;
             return true;
         }
-         else if (in == "bool")
+         else if (in == "Bool")
         {
             token = ReservedID::Bool;
             return true;
-        } else if (in == "int")
+        } else if (in == "Int")
         {
             token = ReservedID::Int;
             return true;

@@ -16,7 +16,6 @@ namespace nazkell
         BracketClose,
         Right,
         Colon,
-        NewLine,
         EqSign,
     };
 

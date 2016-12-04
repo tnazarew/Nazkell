@@ -108,9 +108,6 @@ namespace nazkell
             case Symbol::Colon:
                 type = Type::Colon;
                 break;
-            case Symbol::NewLine:
-                type = Type::NewLine;
-                break;
             case Symbol::EqSign:
                 type = Type::EqSign;
                 break;

@@ -1,6 +1,5 @@
-#define BOOST_TEST_MODULE test
- #define BOOST_TEST_DYN_LINK
- #define BOOST_TEST_MODULE lexer_test
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE lexer_test
 #include <sstream>
 
 #include <boost/test/unit_test.hpp>
@@ -97,7 +96,7 @@ BOOST_AUTO_TEST_SUITE(lexerTests)
         in.setstate(std::ios_base::badbit);
         Lexer s(in);
 
-        BOOST_CHECK_THROW(s.readNextToken(), std::runtime_error)
+        BOOST_CHECK_THROW(s.readNextToken(), std::runtime_error);
     }
 
 
@@ -153,7 +152,7 @@ BOOST_AUTO_TEST_SUITE(lexerTests)
 
     BOOST_AUTO_TEST_CASE(lexer_scans_bool_properly)
     {
-        std::istringstream in("bool");
+        std::istringstream in("Bool");
         Lexer s(in);
         s.readNextToken();
 
@@ -163,7 +162,7 @@ BOOST_AUTO_TEST_SUITE(lexerTests)
 
     BOOST_AUTO_TEST_CASE(lexer_scans_int_properly)
     {
-        std::istringstream in("int");
+        std::istringstream in("Int");
         Lexer s(in);
         s.readNextToken();
 

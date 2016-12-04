@@ -1,0 +1,9 @@
+/home/tomasz/clion-2016.3/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/tomasz/Nazkell
+-- Boost version: 1.61.0
+-- Found the following Boost libraries:
+--   system
+--   filesystem
+--   unit_test_framework
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/tomasz/Nazkell/cmake-build-debug

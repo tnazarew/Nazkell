@@ -1,0 +1,1 @@
+/usr/bin/c++    -std=c++1y -g   CMakeFiles/lexer_test.dir/test/lexer_test.cpp.o  -o lexer_test -rdynamic libNazkell.a -lboost_filesystem -lboost_system -lboost_unit_test_framework 

@@ -10,12 +10,8 @@ std::string nazkell::toString(ReservedID rid)
     {
         case ReservedID::If:
             return "if";
-        case ReservedID::Then:
-            return "then";
         case ReservedID::Else:
             return "else";
-        case ReservedID::Fi:
-            return "fi";
         case ReservedID::Bool:
             return "bool";
         case ReservedID::Int:
