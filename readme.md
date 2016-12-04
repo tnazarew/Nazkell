@@ -32,8 +32,7 @@
 
 ###lexical conventions:
   [pattern] - optional  
-  {pattern} - zero or more repetitions  
-  pattern<pattern'> - elements from pattern but not from pattern'  
+  {pattern} - zero or more repetitions   
 ###syntax:
   program     = {token | whitespace} 'EOF'  
   whitespace  = newline | space | tab  
