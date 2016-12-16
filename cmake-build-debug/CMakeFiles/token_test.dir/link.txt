@@ -1,1 +1,0 @@
-/usr/bin/c++    -std=c++1y -g   CMakeFiles/token_test.dir/test/token_tests.cpp.o  -o token_test -rdynamic libNazkell.a -lboost_filesystem -lboost_system -lboost_unit_test_framework 

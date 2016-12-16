@@ -22,7 +22,7 @@ namespace nazkell
 
     Value VariableExpression::evaluate(unsigned int stackID) const
     {
-        Value v = Body::getInstance().evaluate(stackID, getID());
+        Value v = Body::getInstance().evaluate(stackID, id);
         return v;
     }
 

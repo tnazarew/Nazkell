@@ -54,7 +54,7 @@ namespace nazkell
         return res;
     }
 
-
+    // checks if function with that stackID and argID exists, if so then returns value of argument with argID
     Value Body::evaluate(unsigned int stackID, const std::string &argID)
     {
         for (int i = 0; i < stack[stackID].functions.size(); i++)

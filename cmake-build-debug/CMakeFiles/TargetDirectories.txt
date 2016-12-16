@@ -1,8 +1,0 @@
-/home/tomasz/Nazkell/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/tomasz/Nazkell/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/tomasz/Nazkell/cmake-build-debug/CMakeFiles/test.dir
-/home/tomasz/Nazkell/cmake-build-debug/CMakeFiles/nazkell.dir
-/home/tomasz/Nazkell/cmake-build-debug/CMakeFiles/parser_test.dir
-/home/tomasz/Nazkell/cmake-build-debug/CMakeFiles/token_test.dir
-/home/tomasz/Nazkell/cmake-build-debug/CMakeFiles/lexer_test.dir
-/home/tomasz/Nazkell/cmake-build-debug/CMakeFiles/Nazkell.dir

@@ -1,26 +1,5 @@
 #Nazkell Project - Simple lazy function language interpreter
-
-###requirements
-
-- cmake >2.8
-
-###compiling and testing
-1. `mkdir build`
-
-2. `cd build`
-
-3. `cmake ..`
-
-4. `make`
-
-5. `./<test_executable>`
-
-###executing
-
-1. `cd build`
-
-2. `./nazkell <filename>`
-
+##Grammar 
 ###tokens
 
   id - identificator for each variable and function  
@@ -70,7 +49,7 @@
   exp7        = exp  
   ifstatement = 'if' exp exp 'else' exp  
 
-###Grammar Rules
+###Additional Rules
 
 1.Each program has to have Main function with at least one argument, that does not need to be used.
 
@@ -79,6 +58,43 @@
 3.If expressions have to have both conditions stated
 
 4.Each definition contains exactly one expression which is also its return value
+
+###Detailed description
+
+####Data structures
+
+   #####Structure representing parser. Parser build:
+   1. fields
+   - lexer - reads input and extracts tokens from it.
+   2. methods
+   - parse - builds Body object by parsing tokens extracted by lexer. Implements LL(1) parser algorithm.
+   #####Structure representing program. Body build:
+   1. fields
+   - declarations - list od Declaration objects, storing id of function and argument types.
+   - definitions - list of Definition objects, storing function id, argument names and expression representing function code.
+   - body - static pointer for implementing Singleton model
+   
+
+###requirements
+
+- cmake >2.8
+
+###compiling and testing
+1. `mkdir build`
+
+2. `cd build`
+
+3. `cmake ..`
+
+4. `make`
+
+5. `./<test_executable>`
+
+###executing
+
+1. `cd build`
+
+2. `./nazkell <filename>`
 
 ###Example
 

@@ -33,7 +33,8 @@ namespace nazkell
         ~Body();
 
         Value evaluate(const std::vector<std::shared_ptr<Expression>> &args, std::string fid);
-
+        Value evaluate(unsigned int, const std::string&);
+    private:
         void resetStack();
 
         unsigned int pushStack(const std::vector<std::pair<std::string, std::shared_ptr<Expression>>>& temp_args,
@@ -42,8 +43,6 @@ namespace nazkell
         void popStack();
 
         void throwFunctionNotDeclared(const std::string&);
-
-        Value evaluate(unsigned int, const std::string&);
 
         std::shared_ptr<Definition> getDef(const std::string&);
 
