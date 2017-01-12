@@ -71,6 +71,7 @@ namespace nazkell {
         VariableExpression(std::string id_);
 
         ~VariableExpression();
+        std::string getID() const;
     };
 
     class FunctionExpression : public Expression {
