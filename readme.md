@@ -85,7 +85,7 @@
    - resetStack - clears stack
 
     ![interpreter_expressions]
-    (https://github.com/tnazarew/Nazkell/blob/master/images/interpreter_expressions.png)
+    (https://github.com/tnazarew/Nazkell/blob/master/images/interpreter_expression.png)
 ###requirements
 
 - cmake >2.8
