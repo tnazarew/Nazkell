@@ -65,19 +65,23 @@
 
    #####Structure representing parser. Parser build:
    1. fields
+        
         - lexer - reads input and extracts tokens from it.
    
    2. methods
+        
         - parse - builds Body object by parsing tokens extracted by lexer. Implements LL(1) parser algorithm.
    
    #####Structure representing program. Body build:
    1. fields
+        
         - declarations - list od Declaration objects, storing id of function and argument types.
         - definitions - list of Definition objects, storing function id, argument names and expression representing function code.
         - body - static pointer for implementing Singleton model
         - stack - vector of StackFunction structures representing functions metadata (arguments, id)
         - highWaterMark - size of stack
    2. methods
+   
         - evaluate - two overloaded methods:
             - args, fid - takes args without evaluating(lazyness) them and stores them on the stack as StackFunction with name fid
             and its stackID generated, then it's evaluating definition of function with corresponding fid
