@@ -61,9 +61,13 @@
 
 ###Detailed description
 
-####Data structures
+####Main data structures
 
    #####Structure representing parser. Parser build:
+   
+   ![interpreter_expressions]
+      (https://github.com/tnazarew/Nazkell/blob/master/images/Parser.png)
+
    fields
         
         - lexer - reads input and extracts tokens from it.
@@ -75,6 +79,9 @@
    
    #####Structure representing program. Body build:
    
+   ![interpreter_expressions]
+      (https://github.com/tnazarew/Nazkell/blob/master/images/Body.png)
+
    fields
         
         - declarations - list od Declaration objects, storing id of function and argument types.
@@ -92,8 +99,17 @@
         - popStack - pops StackFunction from stack
         - resetStack - clears stack
 
+   
+   ####Inheritance of Expression class 
+   
    ![interpreter_expressions]
    (https://github.com/tnazarew/Nazkell/blob/master/images/interpreter_expression.png)
+   
+   
+   
+   
+   ####Behavioral info
+   Because the language is lazy, the actual evaluation of value is done when it's demanded. Any other case the expression is put on stack where it awaits for demand.
 ###requirements
 
 - cmake >2.8
