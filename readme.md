@@ -63,7 +63,7 @@
 
 ####Main data structures
 
-   #####Structure representing parser. Parser build:
+#####Structure representing parser. Parser build:
    
    ![interpreter_expressions]
       (https://github.com/tnazarew/Nazkell/blob/master/images/Parser.png)
@@ -77,7 +77,7 @@
         - parse - builds Body object by parsing tokens extracted by lexer. Implements LL(1) parser algorithm.
    
    
-   #####Structure representing program. Body build:
+  #####Structure representing program. Body build:
    
    ![interpreter_expressions]
       (https://github.com/tnazarew/Nazkell/blob/master/images/Body.png)
@@ -100,7 +100,7 @@
         - resetStack - clears stack
 
    
-   ####Inheritance of Expression class 
+####Inheritance of Expression class 
    
    ![interpreter_expressions]
    (https://github.com/tnazarew/Nazkell/blob/master/images/interpreter_expression.png)
